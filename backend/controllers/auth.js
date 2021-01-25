@@ -19,10 +19,8 @@ module.exports = {
         email: req.body.email,
         password: hash,
       };
-      console.log(body);
       UserSql.CreateUser(body)
         .then((user) => {
-          console.log(user);
           res.status(201).json({ message: "User created successfully", user });
         })
         .catch(() => {
@@ -35,10 +33,8 @@ module.exports = {
     res.json(user);
   },
   async LoginUser(req, res) {
-    console.log('1 ' + req.body);
     try {
         let user = await UserSql.FindUser(req.body);
-        console.log('3 ' + user);
         if (user && bcrypt.compareSync(req.body.password, user.password)) {
             if (bcrypt.compareSync(req.body.password, user.password)) {
                 console.log("Password is correct");
@@ -60,7 +56,6 @@ module.exports = {
     const user = await User.findOne({
       email: req.body.email,
     });
-    console.log(user);
     if (!user) {
       return res.status(409).json({ message: "Email does not exist" });
     }
