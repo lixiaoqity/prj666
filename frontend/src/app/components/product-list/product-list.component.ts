@@ -10,7 +10,7 @@ import { ShoppingCartService } from '../../service/shoppingcart.service';
   styleUrls: ['./product-list.component.css'],
 })
 export class ProductListComponent implements OnInit {
-  products: Array<Product>;
+  products: Array<Product> = [];
   page: number = 1;
   category: string = null;
   querySub: any;
@@ -28,9 +28,12 @@ export class ProductListComponent implements OnInit {
       .getProducts(num, this.category)
       .subscribe((data) => {
         if (data.length > 0) {
-          this.products = data; //.sort((a,b)=>Date.parse(a.postDate)-Date.parse(b.postDate))
+          // this.products = data; //.sort((a,b)=>Date.parse(a.postDate)-Date.parse(b.postDate))
+          data.forEach(product => {
+            this.products.push(product);
+          });
+
           this.page = num;
-          console.log(this.products);
         }
       });
     window.scrollTo(0, 0);

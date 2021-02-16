@@ -23,6 +23,8 @@ models.sequelize
   });
 
 require("./routes")(app);
+app.use(express.static(__dirname + "/public"));
+
 app.get("*", (req, res) =>
   res.status(200).send({
     message: "Welcome to AH printing.",
