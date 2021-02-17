@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Product } from '../../model/Product';
 import { ShoppingCartService } from 'src/app/service/shoppingcart.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -11,6 +12,7 @@ export class ShoppingCartComponent implements OnInit {
   products: Array<Product> = [];
   product: Product;
   total: number;
+  apiPicUrl: string = environment.apiUrl + "/pictures";
 
   constructor(private shoppingCartService: ShoppingCartService) {}
 

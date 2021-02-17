@@ -18,6 +18,16 @@ export class ShoppingCartService {
 
   ngOnInit() {}
 
+  isInCart(product) {
+    const productExistInCart = this.shoppingCartList.find(
+      ({ product_id }) => product_id === product.product_id
+    );
+
+    if (productExistInCart) return true;
+
+    return false;
+  }
+
   addToCart(product) {
     // find product by product_id
     const productExistInCart = this.shoppingCartList.find(
