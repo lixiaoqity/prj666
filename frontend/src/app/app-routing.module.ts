@@ -9,6 +9,7 @@ import { ProductListComponent } from './components/product-list/product-list.com
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
 import { ShoppingCartComponent } from './components/shopping-cart/shopping-cart.component';
 import { CheckoutComponent } from './components/checkout/checkout.component';
+import { PaymentFinishComponent } from './components/payment-finish/payment-finish.component';
 import { AuthGuard } from './helper/auth.guard';
 
 const routes: Routes = [
@@ -53,6 +54,11 @@ const routes: Routes = [
   {
     path: 'checkout',
     component: CheckoutComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'payment-finish',
+    component: PaymentFinishComponent,
     canActivate: [AuthGuard]
   },
   {
