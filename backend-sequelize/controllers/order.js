@@ -70,6 +70,10 @@ module.exports = {
       ).toFixed(2);
     }
 
+    console.log("totals");
+    console.log(validated_server_total);
+    console.log(total);
+
     if (validated_server_total !== total) isValidated = false;
 
     if (!isValidated)
