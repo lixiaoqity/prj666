@@ -1,9 +1,8 @@
 const Order = require("../models").Order;
 const Address = require("../models").Address;
 const db = require("../models");
-// const paypal = require("@paypal/checkout-server-sdk");
+const paypal = require("@paypal/checkout-server-sdk");
 const payPalClient = require("./paypal/paypal_component");
-const checkoutNodeJssdk = require("@paypal/checkout-server-sdk");
 
 let constructor = (req) => {
   return {
@@ -46,6 +45,7 @@ module.exports = {
     };
 
     let validated_server_total = 0;
+    let isValidated = true;
 
     // if (same_address !== null && same_address !== "") isValidated = false;
     if (firstName === null || firstName === "") isValidated = false;
@@ -70,6 +70,10 @@ module.exports = {
       ).toFixed(2);
     }
 
+    console.log("totals");
+    console.log(validated_server_total);
+    console.log(total);
+
     if (validated_server_total !== total) isValidated = false;
 
     if (!isValidated)
@@ -84,35 +88,12 @@ module.exports = {
       country: country,
     };
 
-    const request = new paypal.orders.OrdersCreateRequest();
-    request.prefer("return=representation");
-    request.requestBody({
-      intent: "CAPTURE",
-      purchase_units: [
-        {
-          amount: {
-            currency_code: "CAD",
-            value: validated_server_total,
-          },
-        },
-      ],
-    });
-
-    let paypal_result;
-    try {
-      paypal_result = await payPalClient.client().execute(request);
-      console.log(paypal_result.id);
-    } catch (err) {
-      console.log(err);
-    }
-
     const order = {
       order_date: Date.now(),
       order_status: "placed",
       order_shipping_address_id: 999,
       order_total_plus_tax: validated_server_total,
       tax_rate: sales_tax_rate_canada[state].sales_tax,
-      order_number: paypal_result.result.id,
     };
 
     let address_id = "";
@@ -168,11 +149,20 @@ module.exports = {
     //   });
   },
   async handleRequest(req, res) {
-    // 2a. Get the order ID from the request body
-    const orderID = 88888;
-
-    // 3. Call PayPal to get the transaction details
-    let request = new checkoutNodeJssdk.orders.OrdersGetRequest(orderID);
+    // 3. Call PayPal to set up a transaction
+    const request = new paypal.orders.OrdersCreateRequest();
+    request.prefer("return=representation");
+    request.requestBody({
+      intent: "CAPTURE",
+      purchase_units: [
+        {
+          amount: {
+            currency_code: "USD",
+            value: "220.00",
+          },
+        },
+      ],
+    });
 
     let order;
     try {
@@ -180,19 +170,13 @@ module.exports = {
     } catch (err) {
       // 4. Handle any errors from the call
       console.error(err);
-      return res.sendStatus(500);
+      return res.send(500);
     }
 
-    // 5. Validate the transaction details are as expected
-    if (order.result.purchase_units[0].amount.value !== "220.00") {
-      return res.send(400);
-    }
-
-    // 6. Save the transaction in your database
-    // await database.saveTransaction(orderID);
-
-    // 7. Return a successful response to the client
-    return res.send(200);
+    // 5. Return a successful response to the client with the order ID
+    res.status(200).json({
+      orderID: order.result.id,
+    });
   },
   findAll(req, res) {
     return Order.findAll()

@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       address_id: {
         type: DataTypes.INTEGER,
-        defaultValue: DataTypes.UUIDV1,
+        autoIncrement: true,
         primaryKey: true,
       },
       address_line_1: { type: DataTypes.STRING, allowNull: false },

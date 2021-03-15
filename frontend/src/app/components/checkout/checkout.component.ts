@@ -154,7 +154,7 @@ export class CheckoutComponent implements OnInit {
       createOrderOnServer: (data) =>
         fetch(`${BASEURL}/paypal`)
           .then((res) => res.json())
-          .then(),
+          .then((order) => order.orderID),
       onApprove: (data, actions) => {
         console.log(
           'onApprove - transaction was approved, but not authorized',
