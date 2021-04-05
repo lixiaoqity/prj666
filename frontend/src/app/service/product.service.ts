@@ -58,4 +58,9 @@ export class ProductService {
 
     return this.http.request(req);
   }
+
+  delete(id: any): Observable<any> {
+    console.log(id);
+    return this.http.delete(`${BASEURL}/product/${id}`);
+  }
 }
