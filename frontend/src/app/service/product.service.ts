@@ -35,7 +35,7 @@ export class ProductService {
     return this.http.get(`${BASEURL}/product`, { params });
   }
 
-  create(body: any): Observable<any> {
+  update(body: FormGroup, file: File): Observable<any> {
     console.log(body);
     return this.http.post(`${BASEURL}/product`, body);
   }
